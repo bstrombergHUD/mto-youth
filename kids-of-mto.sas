@@ -5,9 +5,9 @@ after the conclusion of MTO. */
 %let year = 2017;
 /*****************************************************************************************************/
 /* First we create the dataset of heads of households based on the last two digits of the PPID */
-data mto_hohs;
+data mto_not_hohs;
 	set mto.best_ssn;
-	where substr(ppid, 9,2) = "01";
+	where substr(ppid, 9,2) ne "01";
 run;
 
 proc sort data=mto_hohs out=mto_hohs_sort(rename=(ssn=ssn_head));
@@ -49,7 +49,7 @@ data mto.mto_hohs_kids_&year.(rename=(ppid=head_ppid) keep=ppid ssn_head ssn_mem
 	if mto and post;
 run;
 
-/* Sum the number of kids the head of household had since 1997. */
+/* Sum the number of kids the individuals had since 1997. */
 
 proc means data=mto.mto_hohs_kids_&year. noprint nway;
 	class head_ppid;
